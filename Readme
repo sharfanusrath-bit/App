@@ -1,0 +1,17 @@
+# Python 3.10.12
+# pip install web3
+
+# Ensure Ganache is Running
+
+# Open Ganache and start the workspace. This will create a local blockchain with test accounts.
+
+# Note down the RPC Server URL (e.g., http://127.0.0.1:7545)
+
+# Configure Django to Use Web3.
+
+# Modify settings.py to include:
+#     WEB3_PROVIDER = "http://127.0.0.1:7545"
+
+# python compile_contract.py
+
+# python deploy.py

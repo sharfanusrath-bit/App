@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A Secure Storage Model With Authentication and Optimal Key Generation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('{% static "img/bg1.jpg" %}') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .navbar {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .navbar-brand h1 {
+      font-size: 1.5rem;
+      color: #fff;
+      margin: 0;
+    }
+
+    .nav-link {
+      color: #fff !important;
+    }
+
+    .table-section {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      margin-top: 100px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .pagination-controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .table thead {
+      background-color: #ef6603;
+      color: #fff;
+    }
+
+    .table a {
+      text-decoration: underline;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <h1>A Secure Storage Model With Authentication and Optimal Key Generation</h1>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'userhome' %}">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'upload_evidence' %}">Upload Evidence</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'my_evidences' %}">Evidence's</a>
+              </li>
+  
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user_logout' %}">Logout</a>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+<br><br><br><br>
+  <!-- Evidence Table Section -->
+  <main class="container">
+    <div class="table-section mt-5">
+      <h2>My Submitted Evidence</h2>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>File</th>
+              <th>Hash</th>
+              <th>Status</th>
+              <th>Blockchain Tx</th>
+              <th>Submitted At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for evidence in page_obj %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{{ evidence.file.url }}" target="_blank">{{ evidence.file.name }}</a></td>
+                <td>{{ evidence.file_hash|truncatechars:20 }}</td>
+                <td>{{ evidence.status }}</td>
+                <td>
+                  <a href="https://etherscan.io/tx/{{ evidence.blockchain_tx }}" target="_blank">
+                    {{ evidence.blockchain_tx|truncatechars:15 }}
+                  </a>
+                </td>
+                <td>{{ evidence.submitted_at|date:"Y-m-d H:i:s" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="text-center">No evidence uploaded yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      {% if page_obj.has_other_pages %}
+        <div class="pagination-controls">
+          {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-outline-primary btn-sm">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary btn-sm">Prev</a>
+          {% endif %}
+
+          <span class="align-self-center">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary btn-sm">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary btn-sm">Last</a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    </div>
+  </main>
+
+</body>
+</html>
